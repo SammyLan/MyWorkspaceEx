@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <limits>
 using namespace std;
 
 
@@ -16,6 +17,10 @@ struct Point {
 	int y;
 	Point() : x(0), y(0) {}
 	Point(int a, int b) : x(a), y(b) {}
+	friend bool operator < (Point const &pt1,Point const &pt2)
+	{
+		return (pt1.x == pt2.x)?(pt1.y < pt2.y):(pt1.x < pt2.x);
+	}
 };
 
 
@@ -32,159 +37,108 @@ struct Point {
  */
 
 class Solution {
-	static double make_double(int x,int y)
-	{
-		struct pt
-		{
-			int a;
-			int b;
-		};
-		static union
-		{
-			long double d;
-			pt p;
-		};
-		d = 0;
-		p.a =x;
-		p.b =y;
-		return d;
-	};
-
-	enum
-	{
-		E_Vertical = 1,
-		E_Horizontal,
-		E_Same,
-		E_None
-	};
-	struct slopeInfo {
-		int type;
-		int count;
-		double slope;
-		slopeInfo() : type(E_None),count(0),slope(0.0){}
-
-		bool operator ==(slopeInfo const & item) 
-		{
-
-			return (item.type == type)&&(item.slope == slope) ;
-		}
-	};
+	typedef double DOUBLE;
 public:
     int maxPoints(vector<Point> &points) {
 		int const size = (int)points.size();
-		if(size <=2)
+		if(size <= 2)
 		{
 			return size;
 		}
+
 		int max = 2;
-		vector<vector<slopeInfo> > info;
-		info.resize(size);
-		slopeInfo item;
+		typedef map<DOUBLE,int> MapD2Int;
+		MapD2Int  * info = new MapD2Int[size];
+		pair <MapD2Int::iterator, bool> pairInsert;
 		for(int i = 1; i < size; ++i)
 		{
 			int tmpMax = 2;
-			vector<slopeInfo> &itemInfo = info[i];
-			itemInfo.reserve(i);
+			int ix = points[i].x;
+			int iy = points[i].y;
+			
+			MapD2Int &itemInfo = info[i];
 			for(int j = i -1; j >= 0;--j)
 			{
-				if( points[i].x == points[j].x)
-				{				
-					if(points[i].y == points[j].y)
+				int jx = points[j].x;
+				int jy = points[j].y;
+				MapD2Int const &itemInfoPre = info[j];
+				DOUBLE slope;
+				if( ix == jx)
+				{
+					//相等
+					if(iy == jy)
 					{
-						vector<slopeInfo> &preItemInfo = info[j];
-						for(vector<slopeInfo>::iterator itPre = preItemInfo.begin(); itPre != preItemInfo.end(); ++itPre)
+						for(MapD2Int::const_iterator it = itemInfoPre.begin(); itemInfoPre.end() != it; ++it)
 						{
-							vector<slopeInfo>::iterator it = find(itemInfo.begin(),itemInfo.end(),*itPre);
-							if(it == itemInfo.end())
+							pairInsert = itemInfo.insert(make_pair(it->first,it->second +1));
+							if(pairInsert.second && pairInsert.first->second > tmpMax)
 							{
-								slopeInfo curitem = *itPre;
-								curitem.count = itPre->count + 1;
-								itemInfo.push_back(curitem);
-								if(tmpMax < curitem.count)
-								{
-									tmpMax = curitem.count;
-								}
+								tmpMax = pairInsert.first->second;
 							}
 						}
-						item.type = E_Same;
-						item.slope = make_double(points[i].x,points[i].y);
-						vector<slopeInfo>::iterator it = find(itemInfo.begin(),itemInfo.end(),item);
-						if(it == itemInfo.end())
-						{
-							item.count =2;
-							itemInfo.push_back(item);
-							if(tmpMax < item.count)
-							{
-								tmpMax = item.count;
-							}
-						}
-						continue;
+						itemInfo.insert(make_pair(numeric_limits<DOUBLE>::min(),2));
+						break;
 					}
+					//垂直
 					else
 					{
-						item.slope = points[i].x;
-						item.type = E_Vertical;
+						slope =  numeric_limits<DOUBLE>::max();
 					}
 					
 				}
-				else if(points[i].y == points[j].y)
-				{					
-					item.slope = points[i].y;
-					item.type = E_Horizontal;
+				//水平
+				else if(iy == jy)
+				{
+					slope = 0.0;					
+				}
+				//其他
+				else
+				{
+					slope = (DOUBLE) (ix- jx)/(iy- jy);
+				}
+				
+				MapD2Int::const_iterator it = itemInfo.find(slope);
+				if(it != itemInfo.end())
+					continue;
+				it = itemInfoPre.find(slope);
+				if(it != itemInfoPre.end())
+				{
+					pairInsert = itemInfo.insert(make_pair(slope,it->second + 1));
+					tmpMax = std::max(tmpMax,pairInsert.first->second);
 				}
 				else
 				{
-					item.type = E_None;
-					item.slope = (long double)(points[i].x- points[j].x)/(points[i].y- points[j].y);
-				}
-				
-				vector<slopeInfo>::iterator iteri = find(itemInfo.begin(),itemInfo.end(),item);
-				if(iteri == itemInfo.end())
-				{
-					vector<slopeInfo> &preItemInfo = info[j];
-					vector<slopeInfo>::iterator iterj  = find(preItemInfo.begin(),preItemInfo.end(),item);
-					if(iterj != preItemInfo.end())
+					it = itemInfoPre.find(numeric_limits<DOUBLE>::min());
+					if(it != itemInfoPre.end())
 					{
-						item.count = iterj->count +1;						
+						pairInsert = itemInfo.insert(make_pair(slope,it->second + 1));
+						tmpMax = std::max(tmpMax,pairInsert.first->second);
 					}
 					else
 					{
-						slopeInfo itemTmp;
-						itemTmp.slope = make_double(points[j].x,points[j].y);
-						itemTmp.type = E_Same;
-						vector<slopeInfo>::iterator iterTmp  = find(preItemInfo.begin(),preItemInfo.end(),itemTmp);
-						if(iterTmp != preItemInfo.end())
-						{
-							item.count = 1 + iterTmp->count;
-						}
-						else
-						{
-							item.count = 2;
-						}
-					}
-					itemInfo.push_back(item);
-					if(item.count > tmpMax)
-					{
-						tmpMax = item.count;
+						itemInfo.insert(make_pair(slope,2));
 					}
 				}
 			}
 			if(tmpMax > max)
 			{
-				if(tmpMax > max)
-				{
-					max = tmpMax;
-				}
+				max = tmpMax;
 			}
 		}
+		delete []info;
 		return max;
     }
 };
 
 /*
 test case:
-[(0,0),(-1,-1),(2,2)]
-
+[(1,1),(1,1),(1,1)]
+3
+[(1,1),(1,1),(2,2),(2,2)]
+4
+[(3,10),(0,2),(0,2),(3,10)]
+4
+[(-4,1),(-7,7),(-1,5),(9,-25)]
 
 */
 int main()
