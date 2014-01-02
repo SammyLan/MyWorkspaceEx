@@ -1,0 +1,14 @@
+/Leetcode/Debug
+
+/Leetcode/*.user
+
+/*.ncb
+/debug/*.exe
+
+/*.suo
+
+/debug/*.ilk
+
+/debug/*.pdb
+
+/debug/*.dll
