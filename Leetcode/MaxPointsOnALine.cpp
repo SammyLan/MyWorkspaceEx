@@ -30,7 +30,26 @@ struct Point {
  *     Point(int a, int b) : x(a), y(b) {}
  * };
  */
+
 class Solution {
+	static double make_double(int x,int y)
+	{
+		struct pt
+		{
+			int a;
+			int b;
+		};
+		static union
+		{
+			long double d;
+			pt p;
+		};
+		d = 0;
+		p.a =x;
+		p.b =y;
+		return d;
+	};
+
 	enum
 	{
 		E_Vertical = 1,
@@ -39,19 +58,17 @@ class Solution {
 		E_None
 	};
 	struct slopeInfo {
-	int a;
-	int b;
-	int y;
-	int count;
-	int type;
-	slopeInfo() : a(0), b(0),count(0),y(0),type(E_None) {}
-	
-	bool operator ==(slopeInfo const & item) 
-	{
-		
-		return (item.type == type)&&(item.a == a) && (item.b * y == item.y * b) ;
-	}
-};
+		int type;
+		int count;
+		double slope;
+		slopeInfo() : type(E_None),count(0),slope(0.0){}
+
+		bool operator ==(slopeInfo const & item) 
+		{
+
+			return (item.type == type)&&(item.slope == slope) ;
+		}
+	};
 public:
     int maxPoints(vector<Point> &points) {
 		int const size = (int)points.size();
@@ -67,13 +84,12 @@ public:
 		{
 			int tmpMax = 2;
 			vector<slopeInfo> &itemInfo = info[i];
+			itemInfo.reserve(i);
 			for(int j = i -1; j >= 0;--j)
 			{
-				int x = points[i].x- points[j].x;
-				int y = points[i].y- points[j].y;
-				if( x == 0)
+				if( points[i].x == points[j].x)
 				{				
-					if(y == 0)
+					if(points[i].y == points[j].y)
 					{
 						vector<slopeInfo> &preItemInfo = info[j];
 						for(vector<slopeInfo>::iterator itPre = preItemInfo.begin(); itPre != preItemInfo.end(); ++itPre)
@@ -82,7 +98,7 @@ public:
 							if(it == itemInfo.end())
 							{
 								slopeInfo curitem = *itPre;
-								curitem.count = itPre->count +1;
+								curitem.count = itPre->count + 1;
 								itemInfo.push_back(curitem);
 								if(tmpMax < curitem.count)
 								{
@@ -90,10 +106,8 @@ public:
 								}
 							}
 						}
-						item.a = points[i].x;
-						item.b = points[i].y;
-						item.y = points[i].y;
 						item.type = E_Same;
+						item.slope = make_double(points[i].x,points[i].y);
 						vector<slopeInfo>::iterator it = find(itemInfo.begin(),itemInfo.end(),item);
 						if(it == itemInfo.end())
 						{
@@ -108,31 +122,20 @@ public:
 					}
 					else
 					{
-						item.a = x;	
-						item.b = 0;
-						item.y = 0;
+						item.slope = points[i].x;
 						item.type = E_Vertical;
 					}
 					
 				}
-				else if(y == 0)
+				else if(points[i].y == points[j].y)
 				{					
-					item.a = 0;
-					item.b = y;
+					item.slope = points[i].y;
 					item.type = E_Horizontal;
-					item.y = y;
 				}
 				else
 				{
 					item.type = E_None;
-					if(y < 0)
-					{
-						y = -y;
-						x = -x;
-					}
-					item.a = x/y;
-					item.b = x%y;
-					item.y = y;
+					item.slope = (long double)(points[i].x- points[j].x)/(points[i].y- points[j].y);
 				}
 				
 				vector<slopeInfo>::iterator iteri = find(itemInfo.begin(),itemInfo.end(),item);
@@ -147,9 +150,7 @@ public:
 					else
 					{
 						slopeInfo itemTmp;
-						itemTmp.a = points[j].x;
-						itemTmp.b = points[j].y;
-						itemTmp.y = points[j].y;
+						itemTmp.slope = make_double(points[j].x,points[j].y);
 						itemTmp.type = E_Same;
 						vector<slopeInfo>::iterator iterTmp  = find(preItemInfo.begin(),preItemInfo.end(),itemTmp);
 						if(iterTmp != preItemInfo.end())
@@ -160,7 +161,6 @@ public:
 						{
 							item.count = 2;
 						}
-								
 					}
 					itemInfo.push_back(item);
 					if(item.count > tmpMax)
