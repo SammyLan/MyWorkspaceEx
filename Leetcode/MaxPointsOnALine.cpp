@@ -17,10 +17,6 @@ struct Point {
 	int y;
 	Point() : x(0), y(0) {}
 	Point(int a, int b) : x(a), y(b) {}
-	friend bool operator < (Point const &pt1,Point const &pt2)
-	{
-		return (pt1.x == pt2.x)?(pt1.y < pt2.y):(pt1.x < pt2.x);
-	}
 };
 
 
@@ -35,9 +31,24 @@ struct Point {
  *     Point(int a, int b) : x(a), y(b) {}
  * };
  */
+#include <algorithm>
+#include <limits>
+using namespace std;
+inline bool operator < (Point const &pt1,Point const &pt2)
+{
+	return (pt1.x == pt2.x)?(pt1.y < pt2.y):(pt1.x < pt2.x);
+}
+inline bool operator == (Point const &pt1,Point const &pt2)
+{
+	return (pt1.x == pt2.x) && (pt1.y == pt2.y);
+}
+#define s_min numeric_limits<double>::min()
+#define s_max numeric_limits<double>::max()
+#define s_zero 0.0;
 
 class Solution {
 	typedef double DOUBLE;
+	typedef map<DOUBLE,int> MapD2Int;
 public:
     int maxPoints(vector<Point> &points) {
 		int const size = (int)points.size();
@@ -45,74 +56,66 @@ public:
 		{
 			return size;
 		}
-
-		int max = 2;
-		typedef map<DOUBLE,int> MapD2Int;
+		std::sort(points.begin(),points.end());
+		int max = 2;		
 		MapD2Int  * info = new MapD2Int[size];
-		pair <MapD2Int::iterator, bool> pairInsert;
 		for(int i = 1; i < size; ++i)
 		{
-			int tmpMax = 2;
-			int ix = points[i].x;
-			int iy = points[i].y;
-			
 			MapD2Int &itemInfo = info[i];
+			Point curPt = points[i];
+			int tmpMax = 2;
+			if (curPt == points[i - 1])
+			{
+				tmpMax = CopyInfo(itemInfo,info[i-1]);
+				if (max < tmpMax)
+				{
+					max = tmpMax;
+				}
+				continue;
+			}
+			
+			int ix = curPt.x;
+			int iy = curPt.y;
 			for(int j = i -1; j >= 0;--j)
 			{
-				int jx = points[j].x;
-				int jy = points[j].y;
+				Point ptj = points[j];
+				if (ptj == points[j + 1])
+				{
+					continue;
+				}
+				int jx = ptj.x;
+				int jy = ptj.y;
 				MapD2Int const &itemInfoPre = info[j];
 				DOUBLE slope;
-				if( ix == jx)
+
+				if( ix == jx) //垂直
 				{
-					//相等
-					if(iy == jy)
-					{
-						for(MapD2Int::const_iterator it = itemInfoPre.begin(); itemInfoPre.end() != it; ++it)
-						{
-							pairInsert = itemInfo.insert(make_pair(it->first,it->second +1));
-							if(pairInsert.second && pairInsert.first->second > tmpMax)
-							{
-								tmpMax = pairInsert.first->second;
-							}
-						}
-						itemInfo.insert(make_pair(numeric_limits<DOUBLE>::min(),2));
-						break;
-					}
-					//垂直
-					else
-					{
-						slope =  numeric_limits<DOUBLE>::max();
-					}
-					
-				}
-				//水平
-				else if(iy == jy)
+					slope =  s_max;					
+				}				
+				else if(iy == jy) //水平
 				{
-					slope = 0.0;					
+					slope = s_zero;					
 				}
-				//其他
-				else
+				else //其他
 				{
 					slope = (DOUBLE) (ix- jx)/(iy- jy);
 				}
-				
 				MapD2Int::const_iterator it = itemInfo.find(slope);
 				if(it != itemInfo.end())
 					continue;
 				it = itemInfoPre.find(slope);
 				if(it != itemInfoPre.end())
 				{
-					pairInsert = itemInfo.insert(make_pair(slope,it->second + 1));
-					tmpMax = std::max(tmpMax,pairInsert.first->second);
+					itemInfo.insert(make_pair(slope,it->second + 1));
+					tmpMax = std::max(tmpMax,it->second + 1);
 				}
 				else
 				{
-					it = itemInfoPre.find(numeric_limits<DOUBLE>::min());
+					it = itemInfoPre.find(s_min);
 					if(it != itemInfoPre.end())
 					{
-						pairInsert = itemInfo.insert(make_pair(slope,it->second + 1));
-						tmpMax = std::max(tmpMax,pairInsert.first->second);
+						itemInfo.insert(make_pair(slope,it->second + 1));
+						tmpMax = std::max(tmpMax,it->second + 1);
 					}
 					else
 					{
@@ -128,6 +131,21 @@ public:
 		delete []info;
 		return max;
     }
+private:
+	int CopyInfo(MapD2Int &itemInfo,MapD2Int const &itemInfoPre)
+	{
+		int max = 2;
+		for(MapD2Int::const_iterator it = itemInfoPre.begin(); itemInfoPre.end() != it; ++it)
+		{
+			itemInfo.insert(make_pair(it->first,it->second +1));
+			if (max < it->second +1)
+			{
+				max = it->second +1;
+			}
+		}
+		itemInfo.insert(make_pair(s_min,2));
+		return max;
+	}
 };
 
 /*
