@@ -59,14 +59,14 @@ public:
 		std::sort(points.begin(),points.end());
 		int max = 2;		
 		MapD2Int  * info = new MapD2Int[size];
+		DOUBLE slope;
 		for(int i = 1; i < size; ++i)
 		{
 			MapD2Int &itemInfo = info[i];
 			Point curPt = points[i];
-			int tmpMax = 2;
 			if (curPt == points[i - 1])
 			{
-				tmpMax = CopyInfo(itemInfo,info[i-1]);
+				int tmpMax = CopyInfo(itemInfo,info[i-1]);
 				if (max < tmpMax)
 				{
 					max = tmpMax;
@@ -79,14 +79,14 @@ public:
 			for(int j = i -1; j >= 0;--j)
 			{
 				Point ptj = points[j];
-				if (ptj == points[j + 1])
+				/*if (ptj == points[j + 1])
 				{
+					++itemInfo[slope];
 					continue;
-				}
+				}*/
 				int jx = ptj.x;
 				int jy = ptj.y;
-				MapD2Int const &itemInfoPre = info[j];
-				DOUBLE slope;
+				MapD2Int const &itemInfoPre = info[j];				
 
 				if( ix == jx) //´¹Ö±
 				{
@@ -100,33 +100,19 @@ public:
 				{
 					slope = (DOUBLE) (ix- jx)/(iy- jy);
 				}
-				MapD2Int::const_iterator it = itemInfo.find(slope);
-				if(it != itemInfo.end())
-					continue;
-				it = itemInfoPre.find(slope);
-				if(it != itemInfoPre.end())
+				pair <MapD2Int::iterator, bool> pairInsert = itemInfo.insert(make_pair(slope,2));
+				if(!pairInsert.second)
 				{
-					itemInfo.insert(make_pair(slope,it->second + 1));
-					tmpMax = std::max(tmpMax,it->second + 1);
-				}
-				else
-				{
-					it = itemInfoPre.find(s_min);
-					if(it != itemInfoPre.end())
-					{
-						itemInfo.insert(make_pair(slope,it->second + 1));
-						tmpMax = std::max(tmpMax,it->second + 1);
-					}
-					else
-					{
-						itemInfo.insert(make_pair(slope,2));
-					}
-				}
+					++pairInsert.first->second;
+				}				
 			}
-			if(tmpMax > max)
+			for (MapD2Int::iterator it = itemInfo.begin(); it != itemInfo.end();++it)
 			{
-				max = tmpMax;
-			}
+				if(max < it->second)
+				{
+					max = it->second;
+				}
+			}			
 		}
 		delete []info;
 		return max;
@@ -135,12 +121,13 @@ private:
 	int CopyInfo(MapD2Int &itemInfo,MapD2Int const &itemInfoPre)
 	{
 		int max = 2;
-		for(MapD2Int::const_iterator it = itemInfoPre.begin(); itemInfoPre.end() != it; ++it)
+		itemInfo = itemInfoPre;
+		for(MapD2Int::iterator it = itemInfo.begin(); itemInfo.end() != it; ++it)
 		{
-			itemInfo.insert(make_pair(it->first,it->second +1));
-			if (max < it->second +1)
+			++it->second;
+			if (max < it->second)
 			{
-				max = it->second +1;
+				max = it->second;
 			}
 		}
 		itemInfo.insert(make_pair(s_min,2));
