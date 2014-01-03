@@ -57,21 +57,23 @@ public:
 			return size;
 		}
 		std::sort(points.begin(),points.end());
-		int max = 2;		
-		MapD2Int  * info = new MapD2Int[size];
+		int max = 2;
 		DOUBLE slope;
 		pair <MapD2Int::iterator, bool> pairInsert;
+		MapD2Int itemInfoPre;
+		MapD2Int itemInfo;
 		for(int i = 1; i < size; ++i)
 		{
-			MapD2Int &itemInfo = info[i];
+			itemInfo.clear();
 			Point curPt = points[i];
 			if (curPt == points[i - 1])
 			{
-				int tmpMax = CopyInfo(itemInfo,info[i-1]);
+				int tmpMax = CopyInfo(itemInfo,itemInfoPre);
 				if (max < tmpMax)
 				{
 					max = tmpMax;
 				}
+				itemInfoPre.swap(itemInfo);
 				continue;
 			}
 			
@@ -87,7 +89,6 @@ public:
 				}
 				int jx = ptj.x;
 				int jy = ptj.y;
-				MapD2Int const &itemInfoPre = info[j];				
 
 				if( ix == jx) //´¹Ö±
 				{
@@ -113,9 +114,9 @@ public:
 				{
 					max = it->second;
 				}
-			}			
+			}
+			itemInfoPre.swap(itemInfo);
 		}
-		delete []info;
 		return max;
     }
 private:
