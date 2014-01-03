@@ -23,9 +23,9 @@ class Solution {
 public:
      int longestConsecutive(vector<int> &num) {
 		size_t size = num.size();
-		if(size == 0)
+		if(size < 2)
 		{
-			return 0;
+			return size;
 		}
 		
 		InfoList infoList;
@@ -35,7 +35,7 @@ public:
 		{
 			long long val = num[i] + 2147483648;	//确保数据都落在0以上的区间
 			unsigned int  a = (unsigned int) val  / size;
-			unsigned int b = (unsigned int) val  %  size;
+			unsigned int b = (unsigned int)(val - a * (unsigned int)size);
 			infoList[b].insert(make_pair(a,1));
 		}
 		return GetLCS(infoList);
