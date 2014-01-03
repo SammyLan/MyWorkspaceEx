@@ -60,6 +60,7 @@ public:
 		int max = 2;		
 		MapD2Int  * info = new MapD2Int[size];
 		DOUBLE slope;
+		pair <MapD2Int::iterator, bool> pairInsert;
 		for(int i = 1; i < size; ++i)
 		{
 			MapD2Int &itemInfo = info[i];
@@ -79,11 +80,11 @@ public:
 			for(int j = i -1; j >= 0;--j)
 			{
 				Point ptj = points[j];
-				/*if (ptj == points[j + 1])
+				if (ptj == points[j + 1])
 				{
-					++itemInfo[slope];
+					++pairInsert.first->second;;
 					continue;
-				}*/
+				}
 				int jx = ptj.x;
 				int jy = ptj.y;
 				MapD2Int const &itemInfoPre = info[j];				
@@ -100,7 +101,7 @@ public:
 				{
 					slope = (DOUBLE) (ix- jx)/(iy- jy);
 				}
-				pair <MapD2Int::iterator, bool> pairInsert = itemInfo.insert(make_pair(slope,2));
+				pairInsert = itemInfo.insert(make_pair(slope,2));
 				if(!pairInsert.second)
 				{
 					++pairInsert.first->second;
