@@ -223,10 +223,27 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\PalindromeNumber.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SearchA2DMatrix.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\SortList.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
