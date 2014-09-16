@@ -12,3 +12,6 @@
 /debug/*.pdb
 
 /debug/*.dll
+/*.sdf
+/*.opensdf
+/Debug
