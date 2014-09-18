@@ -15,3 +15,5 @@
 /*.sdf
 /*.opensdf
 /Debug
+/CPPConsole/Debug
+/ipch/cppconsole-31f979b4/*.ipch
