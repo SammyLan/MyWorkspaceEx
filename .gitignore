@@ -17,3 +17,7 @@
 /Debug
 /CPPConsole/Debug
 /ipch/cppconsole-31f979b4/*.ipch
+/DataStructuresAndAlgorithms/Debug
+*.user
+debug
+ipch
