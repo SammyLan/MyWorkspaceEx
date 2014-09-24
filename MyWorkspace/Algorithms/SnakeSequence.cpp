@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 using namespace std;
 
 /*
@@ -15,9 +16,9 @@ the number on the right or the number below it is +1 or -1 its value. For exampl
 In this grid, (3, 2, 1, 0, 1) is a snake sequence. 
 
 F(i,j) = 1 + max(f(i-1,j),f(i,j-1)) 	如果P(i,j) 跟P(i-1,j),P(i,j-1)都相连
-       = 1 + f(i-1,j)   	 如果P(i,j)跟P(i-1,j)相连
-       = 1 + f(i,j - 1) 	 如果P(i,j) 跟P(i,j-1)都相连
-       = 1 	 如果P(i,j) 跟P(i-1,j),P(i,j-1)都不相连
+       = 1 + f(i-1,j)   				如果P(i,j)跟P(i-1,j)相连
+       = 1 + f(i,j - 1) 				如果P(i,j) 跟P(i,j-1)都相连
+       = 1 								如果P(i,j) 跟P(i-1,j),P(i,j-1)都不相连
 
 */
 bool IsConnect(int a,int b)
@@ -52,17 +53,14 @@ vector<vector<int> > SnakeSequence(vector<vector<int> > const & grid)
 	size_t size_m = grid[0].size();
 	int max_len = 1;
 
-	vector<vector<int> > flags;
-	flags.resize(size_n);
+	vector<vector<int> > flags(size_n);
 	for(size_t i =0; i < size_n; ++i)
 	{
-		flags[i].resize(size_m);
+		flags[i].resize(size_m,1);
 	}
 
-	flags[0][0] = 1;
 	for( size_t i = 1; i < size_m; ++i)
 	{
-		flags[0][i] = 1;
 		if(IsConnect(grid[0][i],grid[0][i-1]))
 		{
 			flags[0][i] = flags[0][i-1] + 1;
@@ -70,7 +68,6 @@ vector<vector<int> > SnakeSequence(vector<vector<int> > const & grid)
 	}
 	for( size_t i = 1; i < size_n; ++i)
 	{
-		flags[i][0] = 1;
 		if(IsConnect(grid[i][0],grid[i -1][0]))
 		{
 			flags[i][0] = flags[i-1][0] + 1;
@@ -82,7 +79,6 @@ vector<vector<int> > SnakeSequence(vector<vector<int> > const & grid)
 		for(size_t j = 2; j < size_m; ++j)
 		{
 			int & val = flags[i][j];
-			val = 1;
 			if(IsConnect(grid[i][j],grid[i-1][j]))
 			{
 				if(IsConnect(grid[i][j],grid[i][j -1]))
@@ -131,23 +127,14 @@ void Test_SnakeSequence()
 	grid.reserve(n);
 	for(size_t i = 0; i < n; ++i)
 	{
-		vector<int> input;
-		input.reserve(m);
-		for(size_t j = 0; j < m; ++j)
-		{
-			int val = 0;
-			cin>>val;
-			input.push_back(val);
-		}
+		vector<int> input(m);
+		copy_n(istream_iterator<int>(cin),m,input.begin());
 		grid.push_back(input);
 	}
 	vector<vector<int> > result = SnakeSequence(grid);
 	for(vector<vector<int> >::iterator it = result.begin(); it != result.end(); ++it)
 	{
 		cout<<endl;
-		for(vector<int>::iterator itItem = it->begin(); itItem != it->end(); ++ itItem)
-		{
-			cout<< *itItem<<"  ";
-		}
+		copy(it->begin(),it->end(),(ostream_iterator<int>(cout," ")));		 
 	}
 }
