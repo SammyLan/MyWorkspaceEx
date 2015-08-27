@@ -33,5 +33,14 @@
     <ClCompile Include="SortList.cpp">
       <Filter>资源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CombinationSum.cpp">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CombinationSumII.cpp">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateArray.cpp">
+      <Filter>资源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
