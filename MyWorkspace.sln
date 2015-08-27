@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Leetcode", "Leetcode\Leetco
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CPPConsole", "CPPConsole\CPPConsole.vcxproj", "{90A57F38-B57B-42D7-A6F2-C49939F23856}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyWorkspace", "MyWorkspace\MyWorkspace.vcxproj", "{0B54F43E-E173-4E9E-930C-A720B7C3FA68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{90A57F38-B57B-42D7-A6F2-C49939F23856}.Debug|Win32.Build.0 = Debug|Win32
 		{90A57F38-B57B-42D7-A6F2-C49939F23856}.Release|Win32.ActiveCfg = Release|Win32
 		{90A57F38-B57B-42D7-A6F2-C49939F23856}.Release|Win32.Build.0 = Release|Win32
+		{0B54F43E-E173-4E9E-930C-A720B7C3FA68}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0B54F43E-E173-4E9E-930C-A720B7C3FA68}.Debug|Win32.Build.0 = Debug|Win32
+		{0B54F43E-E173-4E9E-930C-A720B7C3FA68}.Release|Win32.ActiveCfg = Release|Win32
+		{0B54F43E-E173-4E9E-930C-A720B7C3FA68}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
