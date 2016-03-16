@@ -33,13 +33,10 @@
     <ClCompile Include="SortList.cpp">
       <Filter>资源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CombinationSum.cpp">
+    <ClCompile Include="WordLadder.cpp">
       <Filter>资源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CombinationSumII.cpp">
-      <Filter>资源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="RotateArray.cpp">
+    <ClCompile Include="MaximumProductSubarray.cpp">
       <Filter>资源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include <boost/smart_ptr/shared_ptr.hpp>
+#include <memory>
 #include <cstdio>
 using namespace std;
 int _tmain(int argc, _TCHAR* argv[])
@@ -12,8 +12,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		return 1;
 	}
-	boost::shared_ptr<FILE> my_shared_file(f,&fclose);
-	boost::shared_ptr<FILE> my_shared_file1(my_shared_file);
+	std::shared_ptr<FILE> my_shared_file(f,&fclose);
+	std::shared_ptr<FILE> my_shared_file1(my_shared_file);
 	return 0;
 }
 

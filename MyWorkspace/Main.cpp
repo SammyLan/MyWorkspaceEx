@@ -8,8 +8,8 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	void Test_SnakeSequence();
-	Test_SnakeSequence();
+	void Test_MaxSumSubArray();
+	Test_MaxSumSubArray(); 
 	return 0;
 }
 

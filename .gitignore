@@ -21,3 +21,7 @@
 *.user
 debug
 ipch
+*.opensdf
+*.sdf
+*.suo
+/*.opendb

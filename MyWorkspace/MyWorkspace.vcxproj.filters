@@ -36,6 +36,9 @@
     <ClCompile Include="Algorithms\SnakeSequence.cpp">
       <Filter>Algorithms</Filter>
     </ClCompile>
+    <ClCompile Include="Algorithms\MaxSumSubArray.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt">
