@@ -5,7 +5,10 @@
 #include "System\CreateProcessHelper.h"
 int _tmain(int argc, _TCHAR* argv[])
 {
-	System::CreateMProcess(_T("C:\\Program Files (x86)\\Tencent\\weiyundisk\\Bin\\wydrive.exe"));
+	if (argc == 2)
+	{
+		System::CreateMProcess(argv[1]);
+	}
 	return 0;
 }
 
