@@ -2,18 +2,10 @@
 //
 
 #include "stdafx.h"
-#include <memory>
-#include <cstdio>
-using namespace std;
+#include "System\CreateProcessHelper.h"
 int _tmain(int argc, _TCHAR* argv[])
 {
-	FILE * f = fopen("text.txt","w");
-	if(f == 0)
-	{
-		return 1;
-	}
-	std::shared_ptr<FILE> my_shared_file(f,&fclose);
-	std::shared_ptr<FILE> my_shared_file1(my_shared_file);
+	System::CreateMProcess(_T("C:\\Program Files (x86)\\Tencent\\weiyundisk\\Bin\\wydrive.exe"));
 	return 0;
 }
 
