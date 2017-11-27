@@ -30,6 +30,9 @@
     <ClCompile Include="System\CreateProcessHelper.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="System\CreateProcessWithExplorerIL.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt">

@@ -69,6 +69,8 @@ namespace System
 
 	BOOL CreateMProcess(LPCWSTR lpCmdLine)
 	{
+		HRESULT RunAppAsUserInternal(LPCWSTR szProcessName, LPWSTR szCmdLine);
+		return RunAppAsUserInternal(lpCmdLine, NULL);
 		CAccessToken hToken;
 		GetRemoveAdminToken(hToken);
 		SetIntegrity(hToken.GetHandle(), Integrity_Level::Medium);
